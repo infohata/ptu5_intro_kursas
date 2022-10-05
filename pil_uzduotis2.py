@@ -18,3 +18,7 @@ def enhance_image(pic, contrast, color, sharpness, brightness, save=False):
     im.show()
 
 enhance_image('img/nenormaliai.jpg', 1.5, 0.25, 2, 1.5, True)
+
+import os, psutil
+process = psutil.Process(os.getpid())
+print(process.memory_info().rss)
