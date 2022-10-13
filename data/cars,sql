@@ -1,0 +1,54 @@
+-- Platesnis WHERE panaudojimas,  BETWEEN ... AND ...
+SELECT * FROM cars WHERE price BETWEEN 10000 AND 30000;
+-- galima tikrinti ir pagal sąrašą
+SELECT * FROM cars WHERE year IN (2005, 2010, 2011) ORDER BY year;
+-- paieška tekste
+SELECT * FROM cars WHERE make LIKE "T%";
+SELECT * FROM cars WHERE make LIKE "%a";
+SELECT * FROM cars WHERE make LIKE "%t%";
+-- vieno simbolio koziris "_"
+SELECT * FROM cars WHERE model LIKE "__";
+SELECT * FROM cars WHERE model LIKE "X_";
+SELECT * FROM cars WHERE model LIKE "X%";
+SELECT * FROM cars WHERE make LIKE "__n%";
+-- NULL
+SELECT * FROM cars WHERE color IS NULL;
+UPDATE cars SET color="Ugly" WHERE color IS NULL;
+SELECT * FROM cars WHERE color IS "Ugly";
+-- Loginės sąlygos AND, OR, NOT
+SELECT * FROM cars WHERE make = "Ford" AND price > 40000;
+SELECT * FROM cars WHERE price < 40000 OR color = "Pink";
+SELECT * FROM cars WHERE (price < 40000 OR color = "Pink") AND year > 2000;
+SELECT * FROM cars WHERE color NOT IN ("Violet", "Pink", "Yellow", "Turquoise", "Ugly", "Fuscia");
+SELECT * FROM cars WHERE (make = "Volvo" OR make = "Ford") AND price NOT BETWEEN 10000 AND 50000;
+-- Rūšiavimas
+SELECT * FROM cars ORDER BY year;
+SELECT * FROM cars ORDER BY year DESC LIMIT 5;
+SELECT * FROM cars ORDER BY year DESC LIMIT 5 OFFSET 5;
+SELECT * FROM cars ORDER BY year DESC LIMIT 5 OFFSET 10;
+SELECT * FROM cars ORDER BY make;
+-- nekreipti dėmesio į raidžių dydį
+SELECT * FROM cars WHERE make="TOYOTA" COLLATE NOCASE;
+-- rezultatų manipuliavimas su || operatorium
+SELECT "Gamintojas: " || make AS gamintojas, model AS modelis FROM cars LIMIT 10;
+SELECT make, model, price, round(price/3.4528, 2) AS price_euro FROM cars;
+SELECT make || " " || model || ", " || year as car_model_year FROM cars ORDER BY year;
+-- amžiaus skaičiavimas
+SELECT make, model, 2022 - year AS age FROM cars ORDER BY age;
+SELECT make, model, price, round(price/1.18, 2) as "price ex vat" FROM cars ORDER BY "price ex vat";
+-- TEISINGAS grupaviams
+-- avg() - virdurkis
+-- min() ir max()
+-- count() - skaičiuoja
+-- sum() - sumuoja
+SELECT sum(price) FROM cars;
+SELECT make, sum(price) FROM cars GROUP BY make;
+SELECT avg(year) FROM cars;
+SELECT avg(year) FROM cars GROUP BY make;
+SELECT make, avg(year), count(*) FROM cars GROUP BY make HAVING count(*) > 1;
+SELECT make, avg(price), count(*) FROM cars GROUP BY make HAVING count(*) > 1;
+SELECT min(price), max(price), avg(price) FROM cars;
+SELECT max(price), make, model FROM cars;
+SELECT color, max(price), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
+SELECT color, min(price), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
+SELECT color, round(avg(price), 2), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
