@@ -32,42 +32,38 @@ def input_project():
         print("KLAIDA: ID turi būti skaičius.")
         return None
     else:
-        return project_id
+        if project_id:
+            project = session.query(Projektas).get(project_id)
+            if project:
+                return project
+            else:
+                print(f"KLAIDA: Projektas su ID: {project_id} neegzistuoja.")
+                return None
+
 
 def update_project():
-    project_id = input_project()
-    if project_id:
-        project = session.query(Projektas).get(project_id)
-        if project:
-            # -- updating here
-            try:
-                name = input(f"Pavadinimas ({project.name}): ")
-                price = float(input(f"Kaina ({project.price}): ") or 0)
-            except ValueError:
-                print("KLAIDA: kaina turi būti skaičius.")
-            else:
-                if len(name) > 0:
-                    project.name = name
-                if price:
-                    project.price = price
-                session.commit()
-                print(f"Projektas {project} atnaujintas sėkmingai.")
-            # -- end of updating
+    project = input_project()
+    if project:
+        try:
+            name = input(f"Pavadinimas ({project.name}): ")
+            price = float(input(f"Kaina ({project.price}): ") or 0)
+        except ValueError:
+            print("KLAIDA: kaina turi būti skaičius.")
+            return
         else:
-            print(f"KLAIDA: Projektas su ID: {project_id} neegzistuoja.")
+            if len(name) > 0:
+                project.name = name
+            if price:
+                project.price = price
+            session.commit()
+            print(f"Projektas {project} atnaujintas sėkmingai.")
 
 def delete_project():
-    project_id = input_project()
-    if project_id:
-        trinamas = session.query(Projektas).get(project_id)
-        if trinamas:
-            # -- deleting here
-            session.delete(trinamas)
-            session.commit()
-            print(f"Projektas {trinamas} ištrintas sėkmingai")
-            # -- end of deleting
-        else:
-            print(f"KLAIDA: Projektas su ID: {project_id} neegzistuoja")
+    trinamas = input_project()
+    if trinamas:
+        session.delete(trinamas)
+        session.commit()
+        print(f"Projektas {trinamas} ištrintas sėkmingai")
 
 while True:
     print("=== Projektų valdymo duomenų bazė ===")
