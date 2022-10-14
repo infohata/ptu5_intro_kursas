@@ -40,7 +40,6 @@ def input_project():
                 print(f"KLAIDA: Projektas su ID: {project_id} neegzistuoja.")
                 return None
 
-
 def update_project():
     project = input_project()
     if project:
